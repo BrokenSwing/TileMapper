@@ -10,6 +10,15 @@ class ProjectProperties:
     def __init__(self, name: str):
         self.name = name
 
+    def as_json(self) -> str:
+        """
+        Serialize properties to Json
+        :return: a json as str
+        """
+        return json.dumps({
+            "name": self.name
+        })
+
     @staticmethod
     def from_file(path_str: str):
         """

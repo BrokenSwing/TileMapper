@@ -13,6 +13,11 @@ class TestProjectProperties(unittest.TestCase):
         properties = ProjectProperties.from_str(content)
         self.assertEqual(properties.name, "Jhon")
 
+    def test_to_json(self):
+        properties = ProjectProperties("Henry")
+        as_json = '{"name": "Henry"}'
+        self.assertEqual(properties.as_json(), as_json)
+
 
 class TestProject(unittest.TestCase):
 
@@ -26,3 +31,7 @@ class TestProject(unittest.TestCase):
         project.name = "Jhon"
         self.assertEqual(project.name, "Jhon")
         self.assertEqual(project.properties.name, "Jhon")
+
+
+if __name__ == "__main__":
+    unittest.main()
