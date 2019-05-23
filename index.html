@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Tile Mapper</title>
+
+        <link rel="stylesheet" href="assets/css/theme.css" />
+        <link rel="stylesheet" href="assets/css/nativize.css" />
+        <link rel="stylesheet" href="assets/css/global.css" />
+        <link rel="stylesheet" href="assets/css/nav.css" />
+    </head>
+<body class="flex">
+    <nav>
+        <header class="nav-header">
+            <h1 class="nav-title">Tile Mapper</h1>
+        </header>
+
+        <div class="nav-item">
+            <h5 class="nav-category">Projet</h5>
+            
+            <button type="button" class="nav-button" data-action="create-project">Créer un nouveau projet</button>
+            <button type="button" class="nav-button">Ouvrir un projet existant</button>
+            <button type="button" class="nav-button" disabled>Configuration du projet</button>
+            <button type="button" class="nav-button" disabled>Sauvegarder le projet</button>
+            <button type="button" class="nav-button" disabled>Fermer le projet</button>
+        </div>
+
+        <div class="nav-item">
+            <h5 class="nav-category">Actions</h5>
+            
+            <button type="button" class="nav-button" disabled>Créer un nouveau niveau</button>
+            <button type="button" class="nav-button" disabled>Charger un niveau</button>
+            <button type="button" class="nav-button" disabled>Sauvegarder le niveau</button>
+            <button type="button" class="nav-button" disabled>Fermer le niveau</button>
+        </div>
+    </nav>
+
+    <main class="content"></main>
+
+    <script>
+        require('./assets/nav.js')
+    </script>
+    </body>
+</html>
