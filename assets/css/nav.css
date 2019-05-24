@@ -22,6 +22,22 @@ nav {
     margin: 0;
 }
 
+.project-title {
+    margin: .2em 0;
+    padding: 1rem 0 1rem 0rem;
+    font-size: 15px;
+    font-weight: normal;
+    background-color: var(--color);
+    color: var(--color-bg);
+    width: 0;
+    transition: width .5s, padding .5s;
+}
+
+.project-title-shown {
+    width: 100%;
+    padding-left : 2rem;
+}
+
 .nav-item {
     padding: .5em 0;
 }

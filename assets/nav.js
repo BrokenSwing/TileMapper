@@ -2,10 +2,20 @@ const { remote, ipcRenderer } = require('electron')
 const path = require('path')
 
 const buttons = document.querySelectorAll('nav .nav-button')
+const projectTitleNode = document.querySelector('.project-title')
 
-ipcRenderer.on('project-open-post', (event, state) => { updateButtonsState(state) })
-ipcRenderer.on('project-close-post', (event, state) => { updateButtonsState(state) })
-ipcRenderer.on('get-manager-state-response', (event, state) => { updateButtonsState(state) })
+ipcRenderer.on('project-open-post', (event, state) => { 
+    updateButtonsState(state)
+    updateProjectTitle(state)
+})
+ipcRenderer.on('project-close-post', (event, state) => { 
+    updateButtonsState(state) 
+    updateProjectTitle(state)
+})
+ipcRenderer.on('get-manager-state-response', (event, state) => { 
+    updateButtonsState(state) 
+    updateProjectTitle(state)
+})
 ipcRenderer.send('get-manager-state')
 
 function updateButtonsState(state) {
@@ -20,10 +30,20 @@ function updateButtonsState(state) {
     })
 }
 
+function updateProjectTitle(state) {
+    if(state.project === null) {
+        projectTitleNode.classList.remove('project-title-shown')
+    } else {
+        projectTitleNode.innerHTML = state.project.name
+        projectTitleNode.classList.add('project-title-shown')
+    }
+}
+
 // Handlers for menu button
 
 const func_mappings = {
-    'create-project': createProjectButtonClick
+    'create-project': createProjectButtonClick,
+    'close-project': triggerProjectClosing
 }
 
 document.querySelector('nav').addEventListener('click', (event) => {
@@ -31,6 +51,10 @@ document.querySelector('nav').addEventListener('click', (event) => {
         func_mappings[event.target.dataset.action](event)
     }
 })
+
+function triggerProjectClosing() {
+    ipcRenderer.send('close-project');
+}
 
 function createProjectButtonClick(event) {
     const modalPath = path.join('file://', __dirname, '../modals/create_project.html')

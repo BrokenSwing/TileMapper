@@ -1,6 +1,6 @@
-const { ipcMain } = require('electron')
+const { ipcMain, dialog } = require('electron')
 
-let Project = class Project {
+class Project {
     
     constructor(name) {
         this.name = name
@@ -46,8 +46,8 @@ class Manager {
             if(save) {
                 // TODO Save project
             }
-            this.mainWindow.webContents.send('project-close-post', this.getCurrentState())
             this.currentProject = null
+            this.mainWindow.webContents.send('project-close-post', this.getCurrentState())
         }
     }
 
