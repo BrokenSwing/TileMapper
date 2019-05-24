@@ -1,6 +1,8 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
+const { Manager, Project } = require('./tilemapper')
 
 let win
+let manager
 
 function createWindow() {
     win = new BrowserWindow({
@@ -10,6 +12,9 @@ function createWindow() {
             nodeIntegration: true
         }
     })
+    // Instanciate projects manager
+    manager = new Manager(win)
+    global.hasProject = false
 
     win.loadFile('index.html')
 
@@ -33,4 +38,12 @@ app.on('activate', () => {
     if(win === null) {
         createWindow()
     }
+})
+
+// Project events listener
+
+ipcMain.on('create-project', (event, id, settings) => {
+    let project = new Project(settings.name)
+    manager.openProject(project)
+    BrowserWindow.fromId(id).close()
 })

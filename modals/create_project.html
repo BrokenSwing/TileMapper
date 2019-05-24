@@ -12,7 +12,22 @@
         <h1 class="modal-title">Création d'un nouveau projet</h1>
         <form>
             <input type="text" id="name" placeholder="Nom du projet"/>
-            <button type="button">Créer le projet</button>
+            <button type="button" id="validate" disabled>Créer le projet</button>
         </form>
     </body>
+    <script>
+        const { ipcRenderer, remote } = require('electron')
+        const validButton = document.getElementById('validate')
+        const nameField = document.getElementById('name')
+
+        nameField.addEventListener('input', (event) => {
+            console.log(nameField.value)
+            validButton.disabled = nameField.value.length === 0
+        })
+
+        validButton.addEventListener('click', () => {
+            validButton.disabled = true
+            ipcRenderer.send('create-project', remote.getCurrentWindow().id, { "name": nameField.value })
+        })
+    </script>
 </html>

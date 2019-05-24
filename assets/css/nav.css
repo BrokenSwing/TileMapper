@@ -51,7 +51,7 @@ nav {
 }
 
 .nav-button:disabled, .nav-button:disabled:hover {
-    color: hsl(0, 0%, 70%);
+    color: var(--color-disabled);
     background-color: var(--color-bg);
 }
 

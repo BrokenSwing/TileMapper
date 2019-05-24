@@ -24,8 +24,7 @@ input[type="text"] {
 }
 
 button,
-input[type="button"], 
-input[type="submit"] {
+input[type="button"] {
     background-color: var(--color-bg);
 	border: 1px solid var(--color-border);
 	display: inline-block;
@@ -34,4 +33,10 @@ input[type="submit"] {
 	padding: 8px 18px;
 	text-decoration: none;
 	text-transform: uppercase;
+}
+
+button:disabled,
+input[type="button"]:disabled {
+    color: var(--color-disabled);
+    cursor: context-menu;
 }
