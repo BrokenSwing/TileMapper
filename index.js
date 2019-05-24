@@ -51,18 +51,11 @@ ipcMain.on('create-project', (event, id, settings) => {
     BrowserWindow.fromId(id).close()
 
     let save = false;
-    if(manager.currentProject !== null) {
+    if(manager.currentProject) {
         let clickedButton = askForProjectSave()
-        switch(clickedButton){
-            case 0:
-                save = true
-                break
-            case 1:
-                save = false
-                break
-            case 2:
-                return
-        }
+        if(clicked > 1)
+            return
+        save = clickedButton == 0
     }
 
     let project = new Project(settings.name)
@@ -85,7 +78,7 @@ ipcMain.on('open-project', (event) => {
         properties: [ "openFile" ],
         message: "Selection du fichier du projet TileMapper"
     }, (paths) => {
-        if(paths !== undefined) {
+        if(paths) {
             let path = paths[0]
 
             Project.fromFile(path, (err, project) => {
@@ -97,7 +90,7 @@ ipcMain.on('open-project', (event) => {
                     })
                 } else {
                     let save = false
-                    if(manager.currentProject !== null) {
+                    if(manager.currentProject) {
                         let buttonClicked = askForProjectSave()
                         if(buttonClicked > 1) 
                             return
