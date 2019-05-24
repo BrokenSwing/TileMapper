@@ -66,7 +66,8 @@ function createProjectButtonClick(event) {
         parent: remote.getCurrentWindow(),
         webPreferences: {
             nodeIntegration: true
-        }
+        },
+        resizable: false
     })
 
     win.setMenu(null)

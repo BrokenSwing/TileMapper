@@ -24,18 +24,21 @@ nav {
 
 .project-title {
     margin: .2em 0;
-    padding: 1rem 0 1rem 0rem;
+    padding: 0rem 2rem 0rem 2rem;
     font-size: 15px;
     font-weight: normal;
     background-color: var(--color);
     color: var(--color-bg);
-    width: 0;
-    transition: width .5s, padding .5s;
+    height: 0;
+    opacity: 0;
+    transition: height .5s, padding .5s, opacity .5s;
 }
 
 .project-title-shown {
-    width: 100%;
-    padding-left : 2rem;
+    padding-top : 1rem;
+    padding-bottom: 1rem;
+    height: auto;
+    opacity: 1;
 }
 
 .nav-item {
