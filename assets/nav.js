@@ -43,7 +43,8 @@ function updateProjectTitle(state) {
 
 const func_mappings = {
     'create-project': createProjectButtonClick,
-    'close-project': triggerProjectClosing
+    'close-project': triggerProjectClosing,
+    'open-project': triggerProjectOpening
 }
 
 document.querySelector('nav').addEventListener('click', (event) => {
@@ -53,7 +54,11 @@ document.querySelector('nav').addEventListener('click', (event) => {
 })
 
 function triggerProjectClosing() {
-    ipcRenderer.send('close-project');
+    ipcRenderer.send('close-project')
+}
+
+function triggerProjectOpening() {
+    ipcRenderer.send('open-project')
 }
 
 function createProjectButtonClick(event) {

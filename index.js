@@ -76,6 +76,41 @@ ipcMain.on('close-project', (event) => {
     }
 })
 
+ipcMain.on('open-project', (event) => {
+    dialog.showOpenDialog(win, {
+        title: "Ouvrir un projet",
+        filters: [
+            { name: "TileMapper project", extensions: ['tmproj'] }
+        ],
+        properties: [ "openFile" ],
+        message: "Selection du fichier du projet TileMapper"
+    }, (paths) => {
+        if(paths !== undefined) {
+            let path = paths[0]
+
+            Project.fromFile(path, (err, project) => {
+                if(err) {
+                    dialog.showMessageBox(win, {
+                        type: 'error',
+                        title: 'Erreur',
+                        message: `Erreur lors du chargement du projet. ${err}`
+                    })
+                } else {
+                    let save = false
+                    if(manager.currentProject !== null) {
+                        let buttonClicked = askForProjectSave()
+                        if(buttonClicked > 1) 
+                            return
+                        save = buttonClicked === 0
+                    }
+                    manager.openProject(project, save)
+                }
+            })
+        }
+    })
+})
+
+// TODO Verify if project changed before calling this function.
 function askForProjectSave() {
     return dialog.showMessageBox(win, {
         type: "question",

@@ -1,4 +1,5 @@
-const { ipcMain, dialog } = require('electron')
+const { ipcMain } = require('electron')
+const fs = require('fs')
 
 class Project {
     
@@ -6,6 +7,26 @@ class Project {
         this.name = name
         this.path = null
         this.currentLevel = null
+    }
+
+    static fromFile(path, cb) {
+        fs.readFile(path, 'utf8', (err, data) => {
+            if(err) {
+                cb("Impossible d'accéder au fichier.", null)
+            }
+            try {
+                let obj = JSON.parse(data)
+                if(obj && obj.name) {
+                    let project = new Project(obj.name)
+                    project.path = path
+                    cb(null, project)
+                } else {
+                    cb("Erreur lors de la lecture du fichier")
+                }
+            } catch (e) {
+                cb("Format du fichier invalide.", null)
+            }
+        })
     }
 
     to_json() {
