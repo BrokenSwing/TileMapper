@@ -1,0 +1,79 @@
+nav {
+    width: 340px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    color: var(--color);
+    background-color: var(--color-bg);
+    border-right: solid 1px var(--color-border);
+    height: 100%;
+}
+
+.nav-header {
+    position: relative;
+    padding: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: solid 1px var(--color-border);
+}
+
+.nav-title {
+    text-transform: uppercase;
+    font-weight: 300;
+    line-height: 1;
+    margin: 0;
+}
+
+.project-title {
+    margin: .2em 0;
+    padding: 0rem 2rem 0rem 2rem;
+    font-size: 15px;
+    font-weight: normal;
+    background-color: var(--color);
+    color: var(--color-bg);
+    height: 0;
+    opacity: 0;
+    transition: height .5s, padding .5s, opacity .5s;
+}
+
+.project-title-shown {
+    padding-top : 1rem;
+    padding-bottom: 1rem;
+    height: auto;
+    opacity: 1;
+}
+
+.nav-item {
+    padding: .5em 0;
+}
+
+.nav-category {
+    margin: .2em 0;
+    padding-left: 2rem;
+    font-size: 11px;
+    font-weight: normal;
+    text-transform: uppercase;
+}
+
+.nav-button, .nav-button:focus {
+    display: block;
+    width: 100%;
+    padding: .3rem;
+    padding-left: calc(2rem + .5rem); /* padding + magic */
+    line-height: 2;
+    text-align: left;
+    font: inherit;
+    font-size: 13px;
+    color: inherit;
+    border: none;
+    background-color: transparent;
+    cursor: default;
+    outline: none;
+}
+
+.nav-button:disabled, .nav-button:disabled:hover {
+    color: var(--color-disabled);
+    background-color: var(--color-bg);
+}
+
+.nav-button:hover {
+    background-color: hsla(0,0%,0%,.1);
+}

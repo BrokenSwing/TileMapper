@@ -1,0 +1,7 @@
+:root {
+    --color: hsl(0, 0%, 22%);
+    --color-bg: hsl(0, 0%, 96%);
+    --color-border: hsl(0, 0%, 88%);
+    --color-link: hsl(0, 0%, 22%);
+    --color-disabled: hsl(0, 0%, 70%)
+}

@@ -1,0 +1,155 @@
+const { app, BrowserWindow, ipcMain, dialog } = require('electron')
+const { Manager, Project } = require('./tilemapper')
+const fs = require('fs')
+const path = require('path')
+
+let win
+let manager
+
+function createWindow() {
+    win = new BrowserWindow({
+        width: 800,
+        height: 600,
+        webPreferences: {
+            nodeIntegration: true
+        },
+        show: false
+    })
+    // Instanciate projects manager
+    manager = new Manager(win)
+    global.hasProject = false
+
+    win.loadFile('index.html')
+
+    win.webContents.openDevTools()
+
+    win.on('ready-to-show', () => {
+        win.show()
+    })
+
+    win.on('closed', () => {
+        win = null
+    })
+
+}
+
+app.on('ready', createWindow)
+
+app.on('window-all-closed', () => {
+    if(process.platform !== "darwin") {
+        app.quit()
+    }
+})
+
+app.on('activate', () => {
+    if(win === null) {
+        createWindow()
+    }
+})
+
+// Project events listener
+
+ipcMain.on('create-project', (event, id, settings) => {
+    BrowserWindow.fromId(id).close()
+
+    requestForProjectSaveIfNeeded().then((doSave) => {
+        let project = new Project(settings.name)
+        manager.openProject(project, doSave)
+    }).catch((e) => {})
+
+})
+
+ipcMain.on('close-project', (event) => {
+    requestForProjectSaveIfNeeded().then((doSave) => {
+        manager.closeProject(doSave)
+    }).catch((e) => {})
+})
+
+ipcMain.on('open-project', (event) => {
+    dialog.showOpenDialog(win, {
+        title: "Ouvrir un projet",
+        filters: [
+            { name: "TileMapper project", extensions: ['tmproj'] }
+        ],
+        properties: [ "openFile" ],
+        message: "Selection du fichier du projet TileMapper"
+    }, (paths) => {
+        if(paths) {
+            let path = paths[0]
+
+            Project.fromFile(path, (err, project) => {
+                if(err) {
+                    dialog.showMessageBox(win, {
+                        type: 'error',
+                        title: 'Erreur',
+                        message: `Erreur lors du chargement du projet. ${err}`
+                    })
+                } else {
+                    requestForProjectSaveIfNeeded().then((doSave) => {
+                        manager.openProject(project, doSave)
+                    }).catch((e) => {})
+                }
+            })
+        }
+    })
+})
+
+// TODO Verify project changed before asking for save needs
+function requestForProjectSaveIfNeeded() {
+    return new Promise((resolve, reject) => {
+        if(manager.currentProject)
+        {
+            // We ask the user if we have to save the project
+            const buttonOnSaveModal = dialog.showMessageBox(win, {
+                type: "question",
+                buttons: ['&Sauvegarder', '&Ne pas sauvegarder', '&Annuler'],
+                defaultId: 0,
+                title: "Sauvegarder le projet en cours",
+                detail: "Voulez-vous sauvegarder le projet actuellement ouvert ?",
+                cancelId: 2,
+                normalizeAccessKeys: true
+            })
+
+            // The user canceled the dialog
+            if(buttonOnSaveModal > 1)
+            {
+                reject('Canceled save choice')
+            }
+            else
+            {
+                // User wants to save the project
+                // We check if the current project does have a path to save it
+                if(buttonOnSaveModal === 0 && !manager.currentProject.path)
+                {
+                    dialog.showSaveDialog(win, {
+                        title: "Fichier de sauvegarde du project",
+                        filters: [
+                            { name: "TileMapper project", extensions: ['tmproj'] }
+                        ],
+                        properties: [ "openFile", "promptToCreate" ],
+                        message: "Selection du fichier de sauvegarde du projet TileMapper"
+                    }, (path) => {
+                        if(path)
+                        {
+                            manager.currentProject.path = path
+                            resolve(buttonOnSaveModal === 0)
+                        }
+                        else
+                        {
+                            reject('Canceled save path choice')
+                        }
+                    });
+                }
+                else
+                {
+                    resolve(buttonOnSaveModal === 0)
+                }
+            }
+        }
+        else
+        {
+            // There's no project, so we don't need to save
+            resolve(false)
+        }
+    })
+}

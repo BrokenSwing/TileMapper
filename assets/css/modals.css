@@ -1,0 +1,42 @@
+input, button {
+    margin-left: 5%;
+    width: 90%;
+}
+
+input[type="text"] {
+    outline: none;
+    display: block;
+    padding: 7px;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    background: transparent;
+    margin-bottom: 10px;
+    height: 45px;
+}
+
+.modal-title {
+    text-transform: uppercase;
+    padding: 10px;
+    color: var(--color);
+    background-color: var(--color-bg);
+    font-size: 1rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+button,
+input[type="button"] {
+    background-color: var(--color-bg);
+	border: 1px solid var(--color-border);
+	display: inline-block;
+	cursor: pointer;
+	color: var(--color);
+	padding: 8px 18px;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+
+button:disabled,
+input[type="button"]:disabled {
+    color: var(--color-disabled);
+    cursor: context-menu;
+}

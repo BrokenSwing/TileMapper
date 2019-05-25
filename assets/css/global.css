@@ -1,0 +1,61 @@
+@font-face {
+    font-family: 'Ubuntu';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Ubuntu'), url(fonts/Ubuntu-Regular.ttf) format('truetype');
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+    font-family: 'Ubuntu', Georgia, Times, 'Times New Roman', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow: hidden;
+    color: var(--color);
+    background-color: #fff;
+}
+
+body {
+    margin: 0;
+    height: 100%;
+}
+
+.flex {
+    display: flex;
+}
+
+a {
+    color: var(--color-link);
+}
+
+h1,
+h2,
+h3 {
+    margin-top: 0;
+    line-height: 1.5;
+}
+
+h1 {
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+h2 {
+    font-size: 1.12em;
+    font-weight: normal;
+}
+
+h3 {
+    font-size: 1.12em;
+    font-weight: 600;
+}
+
+.content {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}

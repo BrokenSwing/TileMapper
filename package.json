@@ -1,0 +1,32 @@
+{
+  "name": "tilemapper",
+  "version": "1.0.0",
+  "description": "A software to create tile maps",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BrokenSwing/TileMapper.git"
+  },
+  "author": "BrokenSwing",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/BrokenSwing/TileMapper/issues"
+  },
+  "homepage": "https://github.com/BrokenSwing/TileMapper#readme",
+  "devDependencies": {
+    "electron-builder": "^20.40.2",
+    "electron": "^5.0.1"
+  },
+  "dependencies": {
+    "electron-settings": "^3.2.0",
+    "yarn": "^1.16.0"
+  },
+  "build": {
+    "appId": "com.github.brokenswing.tilemapper"
+  }
+}
