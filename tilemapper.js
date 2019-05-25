@@ -29,7 +29,7 @@ class Project {
         })
     }
 
-    to_json() {
+    get to_json() {
         JSON.stringify({
             name: this.name
         })
@@ -62,23 +62,15 @@ class Manager {
     }
 
     closeProject(save) {
-        if(this.currentProject !== null) {
+        if(this.currentProject) {
             this.mainWindow.webContents.send('project-close-pre', this.getCurrentState())
-            if(save) {
-                // TODO Save project
+            if(save && this.currentProject.path) {
+                // TODO Fix it, doesn't work as expected
+                fs.writeFileSync(this.currentProject.path, this.currentProject.to_json())
             }
             this.currentProject = null
             this.mainWindow.webContents.send('project-close-post', this.getCurrentState())
         }
-    }
-
-    get hasCurrentProject() {
-        return this.currentProject !== null
-    }
-
-    subscribeEvent(eventName, cb) {
-        listeners = this.eventsListeners[eventName]
-        listeners[listeners.length] = cb
     }
 
 }
