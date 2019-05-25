@@ -1,8 +1,16 @@
+cache:
+  - node_modules
 version: '1.0.0.{build}'
 image:
 - Visual Studio 2019
 environment:
   nodejs_version: "10"
+  GH_TOKEN:
+    secure: 7DjrJ64PUr8T+qGx68xa2bx4yhimjPs+P7nwSpfQsecACdiknaYg/8jcK/GqkwK9
+
+platform:
+  - x86
+  - x64
 
 install:
   - ps: Install-Product node $env:nodejs_version
