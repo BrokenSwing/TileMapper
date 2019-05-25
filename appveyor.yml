@@ -2,7 +2,7 @@ version: '1.0.0.{build}'
 image:
 - Visual Studio 2019
 environment:
-  nodejs_version: "10.4.0"
+  nodejs_version: "10"
 
 install:
   - ps: Install-Product node $env:nodejs_version
