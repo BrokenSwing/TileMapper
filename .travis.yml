@@ -10,5 +10,5 @@ os:
   - linux
   - osx
 script:
-  - sonar scanner
+  - sonar-scanner
   - "npm run dist"
