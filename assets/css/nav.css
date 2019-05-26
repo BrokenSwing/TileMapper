@@ -60,8 +60,7 @@ nav {
     padding-left: calc(2rem + .5rem); /* padding + magic */
     line-height: 2;
     text-align: left;
-    font: inherit;
-    font-size: 13px;
+    font: inherit inherit inherit 13px inherit;
     color: inherit;
     border: none;
     background-color: transparent;
