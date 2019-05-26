@@ -3,8 +3,12 @@ cache: npm
 node_js:
   - "10"
 dist: trusty
+addons:
+  sonarcould:
+    organization: "brokenswing-github"
 os:
   - linux
   - osx
 script:
+  - sonar scanner
   - "npm run dist"
