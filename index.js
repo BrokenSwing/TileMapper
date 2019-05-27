@@ -59,6 +59,14 @@ ipcMain.on('create-project', (event, id, settings) => {
 
 })
 
+ipcMain.on('save-project', (event) => {
+    requestForSavePathIfNeeded().then(() => {
+        if(manager.currentProject) {
+            manager.currentProject.save()
+        }
+    }).catch((e) => {})
+})
+
 ipcMain.on('close-project', (event) => {
     requestForProjectSaveIfNeeded().then((doSave) => {
         manager.closeProject(doSave)
@@ -119,30 +127,17 @@ function requestForProjectSaveIfNeeded() {
             {
                 // User wants to save the project
                 // We check if the current project does have a path to save it
-                if(buttonOnSaveModal === 0 && !manager.currentProject.path)
+                if(buttonOnSaveModal === 0)
                 {
-                    dialog.showSaveDialog(win, {
-                        title: "Fichier de sauvegarde du project",
-                        filters: [
-                            { name: "TileMapper project", extensions: ['tmproj'] }
-                        ],
-                        properties: [ "openFile", "promptToCreate" ],
-                        message: "Selection du fichier de sauvegarde du projet TileMapper"
-                    }, (path) => {
-                        if(path)
-                        {
-                            manager.currentProject.path = path
-                            resolve(buttonOnSaveModal === 0)
-                        }
-                        else
-                        {
-                            reject('Canceled save path choice')
-                        }
-                    });
+                    requestForSavePathIfNeeded().then(() => {
+                        resolve(true)
+                    }).catch((e) => {
+                        reject(e)
+                    })
                 }
                 else
                 {
-                    resolve(buttonOnSaveModal === 0)
+                    resolve(false)
                 }
             }
         }
@@ -150,6 +145,34 @@ function requestForProjectSaveIfNeeded() {
         {
             // There's no project, so we don't need to save
             resolve(false)
+        }
+    })
+}
+
+function requestForSavePathIfNeeded() {
+    return new Promise((resolve, reject) => {
+        if(manager.currentProject && !manager.currentProject.path) {
+            dialog.showSaveDialog(win, {
+                title: "Fichier de sauvegarde du project",
+                filters: [
+                    { name: "TileMapper project", extensions: ['tmproj'] }
+                ],
+                properties: [ "openFile", "promptToCreate" ],
+                message: "Selection du fichier de sauvegarde du projet TileMapper"
+            }, (path) => {
+                if(path)
+                {
+                    manager.currentProject.path = path
+                    resolve()
+                }
+                else
+                {
+                    reject('Canceled save path choice')
+                }
+            });
+        }
+        else {
+            resolve()
         }
     })
 }

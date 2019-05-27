@@ -29,10 +29,14 @@ class Project {
         })
     }
 
-    get to_json() {
-        JSON.stringify({
+    toJson() {
+        return JSON.stringify({
             name: this.name
         })
+    }
+
+    save() {
+        fs.writeFileSync(this.path, this.toJson())
     }
 
 }
@@ -65,8 +69,7 @@ class Manager {
         if(this.currentProject) {
             this.mainWindow.webContents.send('project-close-pre', this.getCurrentState())
             if(save && this.currentProject.path) {
-                // TODO Fix it, doesn't work as expected
-                fs.writeFileSync(this.currentProject.path, this.currentProject.to_json())
+                this.currentProject.save()
             }
             this.currentProject = null
             this.mainWindow.webContents.send('project-close-post', this.getCurrentState())
