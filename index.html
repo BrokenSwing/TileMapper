@@ -8,6 +8,13 @@
         <link rel="stylesheet" href="assets/css/nativize.css" />
         <link rel="stylesheet" href="assets/css/global.css" />
         <link rel="stylesheet" href="assets/css/nav.css" />
+
+        <style>
+            canvas {
+                display: inline;
+            }
+        </style>
+
     </head>
 <body class="flex">
     <nav>
@@ -39,10 +46,14 @@
         </div>
     </nav>
 
-    <main class="content"></main>
+    <main class="content">
+        <canvas id="levelCanvas" width="500px" height="500px"></canvas>
+        <canvas id="tilePickerCanvas" width="500px" height="500px"></canvas>
+    </main>
 
     <script>
         require('./assets/nav.js')
+        require('./assets/editor.js')
     </script>
     </body>
 </html>
