@@ -11,20 +11,20 @@
     <body>
         <h1 class="modal-title">Création d'un nouveau projet</h1>
         <form>
-            <input type="text" id="name" placeholder="Nom du projet"/>
+            <input type="text" id="path" placeholder="Chemin vers le tileset"/>
             <input type="number" min="1" id="rows" placeholder="Nombre de lignes">
             <input type="number" min="1" id="columns" placeholder="Nombre de colonnes">
-            <button type="button" id="validate" disabled>Créer le projet</button>
+            <button type="button" id="validate" disabled>Ouvrir le tileset</button>
         </form>
     </body>
     <script>
         const { ipcRenderer, remote } = require('electron')
         const validButton = document.getElementById('validate')
-        const nameField = document.getElementById('name')
+        const pathField = document.getElementById('path')
         const rowsField = document.getElementById('rows')
         const columnsField = document.getElementById('columns') 
 
-        nameField.addEventListener('input', () => {
+        pathField.addEventListener('input', () => {
             validateFields()
         })
 
@@ -47,10 +47,10 @@
             if(!validButton.disabled) {
                 validButton.disabled = true
                 ipcRenderer.send(
-                    'create-project', 
+                    'open-tileset', 
                     remote.getCurrentWindow().id, 
                     {
-                        "name": nameField.value,
+                        "path": pathField.value,
                         "rows": rowsField.value,
                         "columns": columnsField.value
                     }
@@ -59,7 +59,7 @@
         })
 
         function validateFields() {
-            if(rowsField.value < rowsField.min || columnsField.value < columnsField.min || nameField.value.length === 0) {
+            if(rowsField.value < rowsField.min || columnsField.value < columnsField.min || pathField.value.length === 0) {
                 validButton.disabled = true
             } else {
                 validButton.disabled = false

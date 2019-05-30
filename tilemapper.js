@@ -1,12 +1,17 @@
 const { ipcMain } = require('electron')
 const fs = require('fs')
+const sizeOf = require('image-size')
+const path = require('path')
 
 class Project {
     
-    constructor(name) {
+    constructor(name, width, height) {
         this.name = name
+        this.width = width
+        this.height = height
         this.path = null
-        this.currentLevel = null
+        this.grid = []
+        this.tileSets = {}
     }
 
     static fromFile(path, cb) {
@@ -16,8 +21,8 @@ class Project {
             }
             try {
                 let obj = JSON.parse(data)
-                if(obj && obj.name) {
-                    let project = new Project(obj.name)
+                if(obj && obj.name && obj.width && obj.height) {
+                    let project = new Project(obj.name, obj.width, obj.height)
                     project.path = path
                     cb(null, project)
                 } else {
@@ -29,9 +34,23 @@ class Project {
         })
     }
 
+    addTileSet(tileSet) {
+        const name = `#${Object.keys(this.tileSets).length}`
+        this.tileSets[name] = tileSet
+    }
+
     toJson() {
         return JSON.stringify({
-            name: this.name
+            name: this.name,
+            width: this.width,
+            height: this.height,
+            textures: (() => {
+                let ret = []
+                Object.keys(this.tileSets).forEach((el) => {
+                    ret.push(this.tileSets[el].serialize(this))
+                })
+                return ret
+            })(),
         })
     }
 
@@ -78,5 +97,46 @@ class Manager {
 
 }
 
+class TileSet {
+
+    constructor(path, columnsCount, rowsCount) {
+        this.path = path
+        this.columns = columnsCount
+        this.rows = rowsCount
+        this.width = null
+        this.height = null
+        this.tileHeight = null
+        this.tileWidth = null
+    }
+
+    validate() {
+        return new Promise((resolve, reject) => {
+            sizeOf(this.path, (err, dimensions) => {
+                if(err) {
+                    reject("Impossible de récupérer la taille de l'image.")
+                } else if(dimensions.width / this.columns % 1 === 0 && dimensions.height / this.rows % 1 === 0) {
+                    this.width = dimensions.width
+                    this.height = dimensions.height
+                    this.tileHeight = dimensions.width / this.columns
+                    this.tileWidth = dimensions.height / this.rows
+                    resolve()
+                } else {
+                    reject("Le nombre de lignes/colonnes n'est pas un multiple de la hauteur/largeur de l'image.")
+                }
+            })
+        })
+    }
+
+    serialize(project) {
+        return {
+            path: path.relative(path.resolve(project.path, '..'), this.path),
+            rows: this.rows,
+            columns: this.columns
+        }
+    }
+
+}
+
 exports.Manager = Manager
 exports.Project = Project
+exports.TileSet = TileSet

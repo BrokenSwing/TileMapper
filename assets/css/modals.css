@@ -3,7 +3,8 @@ input, button {
     width: 90%;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="number"] {
     outline: none;
     display: block;
     padding: 7px;

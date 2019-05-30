@@ -1,5 +1,5 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron')
-const { Manager, Project } = require('./tilemapper')
+const { Manager, Project, TileSet } = require('./tilemapper')
 const fs = require('fs')
 const path = require('path')
 
@@ -51,11 +51,12 @@ app.on('activate', () => {
 
 ipcMain.on('create-project', (event, id, settings) => {
     BrowserWindow.fromId(id).close()
-
-    requestForProjectSaveIfNeeded().then((doSave) => {
-        let project = new Project(settings.name)
-        manager.openProject(project, doSave)
-    }).catch((e) => {})
+    if(settings.rows >= 1 && settings.columns >= 1 && settings.name.length > 0) {
+        requestForProjectSaveIfNeeded().then((doSave) => {
+            let project = new Project(settings.name, settings.columns, settings.rows)
+            manager.openProject(project, doSave)
+        }).catch((e) => {})   
+    }
 
 })
 
@@ -100,6 +101,22 @@ ipcMain.on('open-project', (event) => {
             })
         }
     })
+})
+
+ipcMain.on('open-tileset', (event, id, settings) => {
+    BrowserWindow.fromId(id).close()
+    if(settings.path.length > 0 && settings.rows > 1 && settings.columns > 1) {
+        const tileset = new TileSet(settings.path, settings.columns, settings.rows)
+        tileset.validate().then(() => {
+            manager.currentProject.addTileSet(tileset)
+        }).catch((err) => {
+            dialog.showMessageBox(win, {
+                type: 'error',
+                title: 'Erreur',
+                message: `Erreur lors de l'ouverture de l'image. ${err}`
+            })
+        })
+    }
 })
 
 // TODO Verify project changed before asking for save needs

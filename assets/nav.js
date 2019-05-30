@@ -24,9 +24,6 @@ function updateButtonsState(state) {
         if(button.dataset.needproject !== undefined) {
             button.disabled = state.project === null
         }
-        if(button.dataset.needlevel !== undefined) {
-            button.disabled = button.disabled || state.project.currentLevel === null
-        }
     })
 }
 
@@ -34,7 +31,7 @@ function updateProjectTitle(state) {
     if(state.project === null) {
         projectTitleNode.classList.remove('project-title-shown')
     } else {
-        projectTitleNode.innerHTML = state.project.name
+        projectTitleNode.innerHTML =  `${state.project.name} <sub>${state.project.width}x${state.project.height}</sub>`
         projectTitleNode.classList.add('project-title-shown')
     }
 }
@@ -42,10 +39,11 @@ function updateProjectTitle(state) {
 // Handlers for menu button
 
 const func_mappings = {
-    'create-project': createProjectButtonClick,
-    'close-project': triggerProjectClosing,
-    'open-project': triggerProjectOpening,
-    'save-project': triggerProjectSaving
+    'create-project': openCreateProjectModal,
+    'close-project': () => ipcRenderer.send('close-project'),
+    'open-project': () => ipcRenderer.send('open-project'),
+    'save-project': () => ipcRenderer.send('save-project'),
+    'open-tileset': triggerOpenTileSet
 }
 
 document.querySelector('nav').addEventListener('click', (event) => {
@@ -54,23 +52,34 @@ document.querySelector('nav').addEventListener('click', (event) => {
     }
 })
 
-function triggerProjectSaving() {
-    ipcRenderer.send('save-project')
+function triggerOpenTileSet() {
+    const modalPath = path.join('file://', __dirname, '../modals/open_tile_set.html')
+    let win = new remote.BrowserWindow({ 
+        width: 400, 
+        height: 300,
+        show: false,
+        modal: true,
+        parent: remote.getCurrentWindow(),
+        webPreferences: {
+            nodeIntegration: true
+        },
+        resizable: false
+    })
+
+    //win.setMenu(null)
+    win.on('close', () => { win = null })
+    win.once('ready-to-show', () => {
+        win.show()
+    })
+
+    win.loadURL(modalPath)
 }
 
-function triggerProjectClosing() {
-    ipcRenderer.send('close-project')
-}
-
-function triggerProjectOpening() {
-    ipcRenderer.send('open-project')
-}
-
-function createProjectButtonClick(event) {
+function openCreateProjectModal(event) {
     const modalPath = path.join('file://', __dirname, '../modals/create_project.html')
     let win = new remote.BrowserWindow({ 
         width: 400, 
-        height: 200,
+        height: 300,
         show: false,
         modal: true,
         parent: remote.getCurrentWindow(),
@@ -82,9 +91,9 @@ function createProjectButtonClick(event) {
 
     win.setMenu(null)
     win.on('close', () => { win = null })
-    win.loadURL(modalPath)
-
-    win.once('ready-to-show',() => {
+    win.once('ready-to-show', () => {
         win.show()
     })
+
+    win.loadURL(modalPath)
 }
