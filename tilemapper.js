@@ -14,23 +14,39 @@ class Project {
         this.tileSets = {}
     }
 
-    static fromFile(path, cb) {
-        fs.readFile(path, 'utf8', (err, data) => {
-            if(err) {
-                cb("Impossible d'accéder au fichier.", null)
-            }
-            try {
-                let obj = JSON.parse(data)
-                if(obj && obj.name && obj.width && obj.height) {
-                    let project = new Project(obj.name, obj.width, obj.height)
-                    project.path = path
-                    cb(null, project)
+    static fromFile(path) {
+        return new Promise((resolve, reject) => {
+            fs.readFile(path, 'utf8', (err, data) => {
+                if(err) {
+                    reject("Impossible d'accéder au fichier.")
                 } else {
-                    cb("Erreur lors de la lecture du fichier")
+                    try {
+                        let obj = JSON.parse(data)
+                        if(obj && obj.name && obj.width && obj.height && obj.textures) {
+                            let project = new Project(obj.name, obj.width, obj.height)
+                            project.path = path
+
+                            const texturesNames = Object.keys(obj.textures)
+                            let promises = []
+                            texturesNames.forEach((texName) => {
+                                promises.push(TileSet.fromJson(project, obj.textures[texName]))
+                            })
+                            Promise.all(promises).then((tilesets) => {
+                                for(let i = 0; i < tilesets.length; i++) {
+                                    project.tileSets[texturesNames[i]] = tilesets[i]
+                                }
+                                resolve(project)
+                            }).catch((error) => {
+                                reject(error)
+                            })
+                        } else {
+                            reject("Erreur lors de la lecture du fichier")
+                        }
+                    } catch (e) {
+                        reject("Format du fichier invalide.")
+                    }
                 }
-            } catch (e) {
-                cb("Format du fichier invalide.", null)
-            }
+            })
         })
     }
 
@@ -45,9 +61,9 @@ class Project {
             width: this.width,
             height: this.height,
             textures: (() => {
-                let ret = []
+                let ret = {}
                 Object.keys(this.tileSets).forEach((el) => {
-                    ret.push(this.tileSets[el].serialize(this))
+                    ret[el] = this.tileSets[el].serialize(this)
                 })
                 return ret
             })(),
@@ -107,6 +123,21 @@ class TileSet {
         this.height = null
         this.tileHeight = null
         this.tileWidth = null
+    }
+
+    static fromJson(project, obj) {
+        return new Promise((resolve, reject) => {
+            if(obj.path && obj.rows && obj.columns && obj.rows > 0 && obj.columns > 0) {
+                const tileset = new TileSet(path.resolve(project.path, '..', obj.path), obj.columns, obj.rows)
+                tileset.validate().then(() => {
+                    resolve(tileset)
+                }).catch((err) => {
+                    reject(err)
+                })
+            } else {
+                reject('Le fichier a certainement été corrumpu.')
+            }
+        })
     }
 
     validate() {

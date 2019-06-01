@@ -1,0 +1,9 @@
+.editor {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.show-editor {
+    visibility: visible;
+    opacity: 1;
+}

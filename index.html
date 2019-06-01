@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="assets/css/nativize.css" />
         <link rel="stylesheet" href="assets/css/global.css" />
         <link rel="stylesheet" href="assets/css/nav.css" />
+        <link rel="stylesheet" href="assets/css/editor.css" />
 
         <style>
             canvas {
@@ -39,13 +40,17 @@
         <div class="nav-item">
             <h5 class="nav-category">Actions</h5>
 
-            <button type="button" class="nav-button" data-action="open-tileset" data-needproject>Ouvrir un tileset</button>
+            <button type="button" class="nav-button" data-action="add-tileset" data-needproject>Ajouter un tileset</button>
+            <button type="button" class="nav-button" data-needproject>Supprimer un tileset</button>
         </div>
     </nav>
 
     <main class="content">
-        <canvas id="levelCanvas" width="500px" height="500px"></canvas>
-        <canvas id="tilePickerCanvas" width="500px" height="500px"></canvas>
+        <div class="editor">
+            <select id="tileset-selector"></select>
+            <canvas id="levelCanvas" width="500px" height="500px"></canvas>
+            <canvas id="tilePickerCanvas" width="500px" height="500px"></canvas>
+        </div>
     </main>
 
     <script>

@@ -47,7 +47,7 @@
             if(!validButton.disabled) {
                 validButton.disabled = true
                 ipcRenderer.send(
-                    'open-tileset', 
+                    'add-tileset', 
                     remote.getCurrentWindow().id, 
                     {
                         "path": pathField.value,

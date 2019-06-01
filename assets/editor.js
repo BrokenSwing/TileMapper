@@ -1,3 +1,5 @@
+const { ipcRenderer } = require('electron')
+
 class TilePicker {
 
     constructor(canvasId) {
@@ -136,6 +138,23 @@ const tileset = {
     tileWidth: 48,
     tileHeight: 48
 }
+
+const editor = document.querySelector('.editor')
+const selector = document.getElementById('tileset-selector')
+
+ipcRenderer.on('project-open-post', (event, state) => {
+    editor.classList.add('show-editor')
+    const tilesetsNames = Object.keys(state.project.tileSets)
+    console.log(state.project)
+    selector.innerHTML = ""
+    tilesetsNames.forEach((name) => {
+        selector.innerHTML += `<option>${name}</option>`
+    })
+})
+
+ipcRenderer.on('project-close-post', (event, state => {
+    editor.classList.remove('show-editor')
+}))
 
 const tilePicker = new TilePicker('levelCanvas')
 

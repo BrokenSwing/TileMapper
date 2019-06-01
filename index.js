@@ -86,24 +86,22 @@ ipcMain.on('open-project', (event) => {
         if(paths) {
             let path = paths[0]
 
-            Project.fromFile(path, (err, project) => {
-                if(err) {
-                    dialog.showMessageBox(win, {
-                        type: 'error',
-                        title: 'Erreur',
-                        message: `Erreur lors du chargement du projet. ${err}`
-                    })
-                } else {
-                    requestForProjectSaveIfNeeded().then((doSave) => {
-                        manager.openProject(project, doSave)
-                    }).catch((e) => {})
-                }
+            Project.fromFile(path).then((project) => {
+                requestForProjectSaveIfNeeded().then((doSave) => {
+                    manager.openProject(project, doSave)
+                }).catch((e) => {})
+            }).catch((err) => {
+                dialog.showMessageBox(win, {
+                    type: 'error',
+                    title: 'Erreur',
+                    message: `Erreur lors du chargement du projet. ${err}`
+                })
             })
         }
     })
 })
 
-ipcMain.on('open-tileset', (event, id, settings) => {
+ipcMain.on('add-tileset', (event, id, settings) => {
     BrowserWindow.fromId(id).close()
     if(settings.path.length > 0 && settings.rows > 1 && settings.columns > 1) {
         const tileset = new TileSet(settings.path, settings.columns, settings.rows)

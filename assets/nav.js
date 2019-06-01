@@ -43,7 +43,7 @@ const func_mappings = {
     'close-project': () => ipcRenderer.send('close-project'),
     'open-project': () => ipcRenderer.send('open-project'),
     'save-project': () => ipcRenderer.send('save-project'),
-    'open-tileset': triggerOpenTileSet
+    'add-tileset': triggerAddTileSet
 }
 
 document.querySelector('nav').addEventListener('click', (event) => {
@@ -52,8 +52,8 @@ document.querySelector('nav').addEventListener('click', (event) => {
     }
 })
 
-function triggerOpenTileSet() {
-    const modalPath = path.join('file://', __dirname, '../modals/open_tile_set.html')
+function triggerAddTileSet() {
+    const modalPath = path.join('file://', __dirname, '../modals/add_tile_set.html')
     let win = new remote.BrowserWindow({ 
         width: 400, 
         height: 300,
@@ -66,7 +66,7 @@ function triggerOpenTileSet() {
         resizable: false
     })
 
-    //win.setMenu(null)
+    win.setMenu(null)
     win.on('close', () => { win = null })
     win.once('ready-to-show', () => {
         win.show()
