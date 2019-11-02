@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "electron-settings": "^3.2.0",
-    "yarn": "^1.16.0"
+    "yarn": "^1.17.3"
   },
   "build": {
     "appId": "com.github.brokenswing.tilemapper"
